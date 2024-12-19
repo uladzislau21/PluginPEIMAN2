@@ -1,9 +1,9 @@
 # PluginPEIMAN2
 ## The PEIMAN2 plugin for the Perseus proteomics software
 
-__**The main repository of the PEIMAN2 R-package**__:  https://github.com/pnickchi/PEIMAN2
+__**The main repository of the PEIMAN2 R-package**__:https://github.com/pnickchi/PEIMAN2
 
-__***The publication***__: https://www.biorxiv.org/content/10.1101/2022.11.09.515610v2
+__**The publication**__:https://www.biorxiv.org/content/10.1101/2022.11.09.515610v2
 
 ### Before you start enriching PTMs
 
