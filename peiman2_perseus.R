@@ -1,45 +1,81 @@
+install.packages(c('devtools', 'tidyverse'))
+
+devtools::install_github("pnickchi/PEIMAN2")
+devtools::install_github("cox-labs/PerseusR")
+
+
 library(PEIMAN2)
+library(PerseusR)
 library(tidyverse)
 
-# All plugins can be split into 3 parts
-# 1. Reading the command line arguments provided by Perseus and parsing the data.
-# 2. Perform the desired functionality on the data.
-# 3. Write the results to the expected locations in the Perseus formats.
+args = commandArgs(trailingOnly = TRUE)
 
-# 1. Parse command line arguments passed in from Perseus,
-# including input file and output file paths.
-args = commandArgs(trailingOnly=TRUE)
-if (length(args) != 2) {
-  stop("Do not provide additional arguments!", call.=FALSE)
+if (length(args) != 3) {
+  stop("Should provide two arguments: paramFile inFile outFile", call. = FALSE)
 }
-inFile <- args[1]
-outFile <- args[2]
 
+paramFile <- args[1]
+inFile <- args[2]
+outFile <- args[3]
 
-# Use PerseusR to read and write the data in Perseus text format.
-library(PerseusR)
+parameters <- parseParameters(paramFile)
+prot_col <- singleChoiceParamValue(parameters = parameters, name = 'Protein IDs column')
+prot_col_psea <- singleChoiceParamValue(parameters = parameters, name = 'Protein IDs column PSEA')
+sig_col <- singleChoiceParamValue(parameters = parameters, name = 'Significance column')
+sig_col_psea <- singleChoiceParamValue(parameters = parameters, name = 'Significance column PSEA')
+scores_col_psea <- singleChoiceParamValue(parameters = parameters, name = 'Protein scores column')
+program <- singleChoiceParamValue(parameters = parameters, name = 'Program')
+organism <- singleChoiceParamValue(parameters = parameters, name = 'Organism')
+organism_psea <- singleChoiceParamValue(parameters = parameters, name = 'Organism PSEA')
+adj_method <- singleChoiceParamValue(parameters = parameters, name = 'Adjustment method')
+adj_method_psea <- singleChoiceParamValue(parameters = parameters, name = 'Adjustment method PSEA')
+pexponent <- intParamValue(parameters = parameters, name = 'Enrichment weighting exponent, p')
+nperm <- intParamValue(parameters = parameters, name = 'Number of permutation')
+sig_level <- intParamValue(parameters = parameters, name = 'Significance level')
+min_size <- intParamValue(parameters = parameters, name = 'Min size')
+
 mdata <- read.perseus(inFile)
 
-# The mdata object can be easily deconstructed into a number of different
-# data frames. Check reference manual or help() for full list.
+mainMatrix <- main(mdata)
 annotMatrix <- annotCols(mdata)
 
-# 2. Run any kind of analysis on the extracted data.
-#library(PEIMAN2)
-#prot_list <- unname(sapply(mainMatrix$Uniprot, function(x) strsplit(x, ";")[[1]][1]))
-#prot_list <- as.data.frame(prot_list)
-#enrich1 <- runEnrichment(protein = prot_list, os.name = 'Homo sapiens (Human)')
-sgnf_col <- str_which(colnames(annotMatrix), '_Significant')
+if (program == "Singular Enrichment Analysis (SEA)") {
+  
+  df_de <- annotMatrix %>%
+    dplyr::filter(get(sig_col) %in% "+")
+  
+  prot_ids <- str_extract(df_de[[prot_col]], '^[^;]*')
+  
+  results <- runEnrichment(protein = prot_ids, os.name = organism, p.adj.method = adj_method)
+  
+  results <- data.frame(results)
+  n_df <- data.frame(n = 1:nrow(results))
+  
+  outdata <- matrixData(main = n_df, annotCols = results)
+  
+} else {
+  
+  sgnf_prots_rows <- which(annotMatrix[[sig_col_psea]] %in% '+')
+  
+  prot_ids <- str_extract(annotMatrix[[prot_col_psea]][sgnf_prots_rows], '^[^;]*')
+  scores <- annotMatrix[[scores_col_psea]][sgnf_prots_rows]
+  
+  psea_data <- data.frame(UniProtAC = prot_ids,
+                          Score = scores)
+  
+  psea_res <- runPSEA(protein = psea_data,
+                      os.name = organism_psea,
+                      nperm = nperm,
+                      pexponent = pexponent,
+                      p.adj.method = adj_method_psea,
+                      sig.level = sig_level,
+                      minSize = min_size)
+  
+  res <- data.frame(psea_res[[1]])
+  n_df <- data.frame(n = 1:nrow(res))
+    
+  outdata <- matrixData(main = n_df, annotCols = res)
+  
+}
 
-df_de <- annotMatrix %>%
-  filter(annotMatrix[[sgnf_col]] %in% "+")
-
-prot_ids <- str_extract(df_de$Majority.protein.IDs, '^[^;]*')
-
-results <- runEnrichment(protein = prot_ids, os.name = 'Homo sapiens (Human)')
-
-
-# 3. Create a matrixData object which can be conveniently written to file
-# in the Perseus txt format.
-outMdata <- matrixData(main = results[, 2:7], annotCols = results[, c(1, 8)])
-write.perseus(outMdata, outFile)
+write.perseus(outdata, outFile)
