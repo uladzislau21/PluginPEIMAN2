@@ -13,3 +13,8 @@
 
 1. Downloand plugin from [**Perseus plugin store**](https://www.maxquant.org/perseus_plugins/)
 2. Copy .dll files to **\bin** folder of Perseus.
+
+### PEIMAN2 plugin tutorial
+
+1. Run Perseus software with PerseusGui.exe
+2. Perform differential expression (DE) of proteins analysis by the method of your choice
