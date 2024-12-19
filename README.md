@@ -8,3 +8,8 @@
 
 1. Install the latest version of [**R**](https://cloud.r-project.org/).
 2. Install the latest version of [**rtools**](https://cran.r-project.org/bin/windows/Rtools/).
+
+### Plugin installation
+
+1. Downloand plugin from [**Perseus plugin store**](https://www.maxquant.org/perseus_plugins/)
+2. Copy .dll files to **\bin** folder of Perseus.
