@@ -9,6 +9,7 @@
 
 1. Install the latest version of [**R**](https://cloud.r-project.org/).
 2. Install the latest version of [**rtools**](https://cran.r-project.org/bin/windows/Rtools/).
+3. Install [**PerseusR**](https://github.com/cox-labs/PerseusR).
 
 ### Plugin installation
 
