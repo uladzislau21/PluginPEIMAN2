@@ -13,7 +13,9 @@
 
 ### Plugin installation
 
-1. Downloand plugin from [**Perseus plugin store**](https://www.maxquant.org/perseus_plugins/) {TBA}
+TBA --> We are arranging access to plugin through [**Perseus plugin store**](https://www.maxquant.org/perseus_plugins/). Now, please use the following protocol for plugin installation:
+
+1. Downloand plugin .dll files from this repository (4 files)
 2. Copy .dll files to **\bin** folder of Perseus.
 
 ### PEIMAN2 plugin tutorial
