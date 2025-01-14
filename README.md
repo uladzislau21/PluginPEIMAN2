@@ -13,7 +13,7 @@
 
 ### Plugin installation
 
-1. Downloand plugin from [**Perseus plugin store**](https://www.maxquant.org/perseus_plugins/)
+1. Downloand plugin from [**Perseus plugin store**](https://www.maxquant.org/perseus_plugins/) {TBA}
 2. Copy .dll files to **\bin** folder of Perseus.
 
 ### PEIMAN2 plugin tutorial
