@@ -16,7 +16,7 @@
 TBA --> We are arranging access to plugin through [**Perseus plugin store**](https://www.maxquant.org/perseus_plugins/). Now, please use the following protocol for plugin installation:
 
 1. Downloand plugin .dll files from [**here**](https://helsinkifi-my.sharepoint.com/:f:/g/personal/ulavadad_ad_helsinki_fi/EsZTbpkznO9OuScsef2QZTEBttw_JwN0zsI4lPtHCdjflA?e=MTGVs9)
-2. Copy downloaded .dll files to **\bin** folder of Perseus on your local computer.
+2. Copy downloaded .dll files to **\bin** folder of Perseus on your local computer. This will replace existing .dll files.
 
 ### PEIMAN2 plugin tutorial
 
